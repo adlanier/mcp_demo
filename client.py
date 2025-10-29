@@ -1,3 +1,4 @@
+import datetime
 import requests
 import os
 import json
@@ -15,6 +16,8 @@ def post(path, payload, key):
         print(r.text)
 
 def main():
+    now = datetime.datetime.utcnow().isoformat()
+
     # 1) read
     post("/actions/get_top_customers", {"limit": 5}, READER_KEY)
     # 2) paginated read
@@ -24,6 +27,8 @@ def main():
     post("/actions/update_customer_tier", {"customer_id": 3, "tier": "gold", "dry_run": True}, WRITER_KEY)
     # 4) commit write
     post("/actions/update_customer_tier", {"customer_id": 3, "tier": "gold", "dry_run": False}, WRITER_KEY)
+    # 5) read
+    post("/actions/get_top_customers", {"limit": 1, "since": now}, READER_KEY)
 
 if __name__ == "__main__":
     main()
